@@ -1,0 +1,24 @@
+("quicklisp" .
+ (:class qlot/source/dist:source-dist
+  :initargs (:distribution "http://beta.quicklisp.org/dist/quicklisp.txt" :%version :latest)
+  :version "2022-11-07"))
+("clack" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2022-11-07"))
+("websocket-driver" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2022-11-07"))
+("cl-who" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2022-11-07"))
+("parenscript" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2022-11-07"))
+("jingle" .
+ (:class qlot/source/git:source-git
+  :initargs (:remote-url "https://github.com/dnaeon/cl-jingle.git")
+  :version "git-880b68fd5db4c1bf100863af25dbf49944136290"))
