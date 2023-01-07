@@ -9,7 +9,7 @@
   (:export #:start-server-app
            #:stop-server-app
            #:start-client-app
-           #:stop-client-appqq))
+           #:stop-client-app))
 (in-package #:chat)
 
 (defvar *server-app-handler* nil)
