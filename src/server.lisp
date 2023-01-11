@@ -7,8 +7,11 @@
 (defvar *connections* (make-hash-table))
 
 (defun handle-new-connection (con)
-  (setf (gethash con *connections*)
-        (format nil "user-~a" (random 100000))))
+  (let* ((user (format nil "user-~a" (random 100000)))
+         (message (format nil ".... ~a has entered." user)))
+    (setf (gethash con *connections*) user)
+    (loop :for con :being :the :hash-key :of *connections*
+          :do (websocket-driver:send con message))))
 
 (defun broadcast-to-room (connection message)
   (let ((message (format nil "~a: ~a"
