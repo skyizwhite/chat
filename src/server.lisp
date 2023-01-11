@@ -6,33 +6,40 @@
 
 (defvar *connections* (make-hash-table))
 
-(defun handle-new-connection (con)
-  (let* ((user (format nil "user-~a" (random 100000)))
-         (message (format nil ".... ~a has entered." user)))
-    (setf (gethash con *connections*) user)
-    (loop :for con :being :the :hash-key :of *connections*
-          :do (websocket-driver:send con message))))
+(defun create-user ()
+  (format nil "user-~a" (random 100000)))
 
-(defun broadcast-to-room (connection message)
-  (let ((message (format nil "~a: ~a"
-                         (gethash connection *connections*)
-                         message)))
-    (loop :for con :being :the :hash-key :of *connections*
-          :do (websocket-driver:send con message))))
+(defun register-user (connection user)
+  (setf (gethash connection *connections*) user))
+
+(defun find-user (connection)
+  (gethash connection *connections*))
+
+(defun delete-user (connection)
+  (remhash connection *connections*))
+
+(defun broadcast-to-room (message)
+  (loop :for con :being :the :hash-key :of *connections*
+        :do (websocket-driver:send con message)))
+
+(defun handle-new-connection (connection)
+  (let ((user (create-user)))
+    (register-user connection user)
+    (broadcast-to-room (format nil "... ~a has entered." user))))
+
+(defun handle-post-message (connection message)
+  (broadcast-to-room (format nil "~a: ~a" (find-user connection) message)))
 
 (defun handle-close-connection (connection)
-  (let ((message (format nil " .... ~a has left."
-                         (gethash connection *connections*))))
-    (remhash connection *connections*)
-    (loop :for con :being :the :hash-key :of *connections*
-          :do (websocket-driver:send con message))))
+  (broadcast-to-room (format nil "... ~a has left." (find-user connection)))
+  (delete-user connection))
 
 (defun server-app (env)
   (let ((ws (websocket-driver:make-server env)))
     (websocket-driver:on :open ws
                          (lambda () (handle-new-connection ws)))
     (websocket-driver:on :message ws
-                         (lambda (msg) (broadcast-to-room ws msg)))
+                         (lambda (msg) (handle-post-message ws msg)))
     (websocket-driver:on :close ws
                          (lambda (&key code reason)
                            (declare (ignore code reason))
