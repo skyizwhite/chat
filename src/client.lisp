@@ -21,7 +21,7 @@
                        (append-child li))
                 undefined))
 
-            (defparameter ws (new (-Web-Socket "ws://127.0.0.1:5000/")))
+            (defparameter ws (new (-Web-Socket "ws://127.0.0.1:3000/")))
             
             (chain ws (add-event-listener "message" #'receive-message))
             (chain input-field

@@ -17,7 +17,7 @@
 (defun start-server-app ()
   (when *server-app-handler*
     (error "Server app is already started"))
-  (setf *server-app-handler* (clack:clackup #'server-app :port 5000)))
+  (setf *server-app-handler* (clack:clackup #'server-app :port 3000)))
   
 (defun stop-server-app ()
   (unless *server-app-handler*
