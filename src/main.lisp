@@ -13,7 +13,7 @@
 (in-package #:chat)
 
 (defvar *server-app-handler* nil)
-  
+
 (defun start-server-app ()
   (when *server-app-handler*
     (error "Server app is already started"))
